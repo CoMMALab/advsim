@@ -6,6 +6,7 @@ import sys
 import pytest
 
 torch = pytest.importorskip('torch')
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / 'tools' / 'train'))
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / 'tools'))
 import train_league as tl  # noqa: E402
 

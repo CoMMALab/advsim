@@ -20,7 +20,7 @@ What is here:
 - **An RL environment** (`advsim/env.py`): batched `observe`/`step` with
   automatic resets, zero-copy PyTorch views and CUDA graph capture. A smoke
   PPO run reaches about 745K decisions/s on an RTX 4070.
-- **Training** (`tools/train_league.py`): PPO in a league of self-play,
+- **Training** (`tools/train/train_league.py`): PPO in a league of self-play,
   past snapshots and five scripted baselines, with a transformer policy over
   the observation's tokens.
 - **Search** (`advsim/search/`, `engine/tree.py`): simultaneous-move MCTS on
@@ -90,7 +90,7 @@ protocol shows that player, laid out in `advsim/engine/obs_layout.py`.
 
 ```sh
 uv run --group rl python examples/ppo_smoke.py --iters 40                  # PPO against random play, 1 min
-uv run --group rl python tools/train_league.py --anneal --minutes 120 --save artifacts/ppo_mine.npz
+uv run --group rl python tools/train/train_league.py --anneal --minutes 120 --save artifacts/ppo_mine.npz
 uv run --group rl python tools/elo.py --games 2048                         # the bracket of baselines
 uv run --group rl python tools/elo.py --add ppo-t25:mine                   # rate a new player against it
 ```
