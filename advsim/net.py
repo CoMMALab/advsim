@@ -184,7 +184,7 @@ def load(path, device) -> nn.Module:
     path = pathlib.Path(path)
     if not path.exists():
         raise FileNotFoundError(f'{path} missing: download the release checkpoints (README), or train one '
-                                '(examples/ppo_smoke.py --save, tools/train_league.py --save)')
+                                '(examples/ppo_smoke.py --save, tools/train/train_league.py --save)')
     arrays = fileio.read_npz(path)
     arch = int(arrays['arch'][0]) if 'arch' in arrays else 1
     if arch == 3:

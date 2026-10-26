@@ -87,7 +87,7 @@ policy, `-gNN` and `-pruneNN` set the prior weight and the pruning ratio.
 
 ### MLP and PolicyV2
 
-- The league trainer (`tools/train_league.py`: self-play, past snapshots and
+- The league trainer (`tools/train/train_league.py`: self-play, past snapshots and
   the five baselines) on the MLP: `ppo:league` 1611 after 12 minutes; a 3x1024
   MLP rates 1607-1637 at 1k-3k iterations, barely better and 3.2x slower.
 - **PolicyV2** (embeddings, one shared Pokemon encoder, pointer heads): 45

@@ -1,7 +1,7 @@
 """PPO in a league: self-play, past snapshots and the five baselines.
 
-    uv run --group rl python tools/train_league.py --anneal --minutes 120 --save artifacts/ppo_x.npz
-    uv run --group rl python tools/train_league.py --init dmg46 --lr 1e-4 --anneal --minutes 1380 --save ...
+    uv run --group rl python tools/train/train_league.py --anneal --minutes 120 --save artifacts/ppo_x.npz
+    uv run --group rl python tools/train/train_league.py --init dmg46 --lr 1e-4 --anneal --minutes 1380 --save ...
 
 The defaults are the recipe that works: PolicyTF, compact, width 96, 3 layers,
 reacting to its prediction of the foe's action (--opp-action 0.1), with damage
@@ -38,7 +38,8 @@ import json
 import torch
 import torch.nn as nn
 
-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+sys.path[:0] = [str(ROOT), str(ROOT / 'tools')]  # advsim, and league.py beside the tools
 
 from advsim import fileio, net as net_, players  # noqa: E402
 from advsim.env import Gen3Env  # noqa: E402

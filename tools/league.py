@@ -1,7 +1,7 @@
 """The league the trainer plays in: who each slot faces (self-play, past
 snapshots, the five baselines), the runner that plays every snapshot through
 one compiled network, and the evaluator that scores a network on fixed
-mirrored couples. Used by tools/train_league.py and tools/policy_eval.py."""
+mirrored couples. Used by tools/train/train_league.py and tools/policy_eval.py."""
 from __future__ import annotations
 
 import copy
