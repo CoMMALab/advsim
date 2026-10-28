@@ -283,6 +283,7 @@ def main(argv=None) -> int:
     ap.add_argument('--add', default=None, help='play one new player against everyone in --out, append, refit')
     ap.add_argument('--against', default=None, help='with --add: only these opponents (comma-separated), for sweeps')
     ap.add_argument('--anchor', default='random', help='the player rated 1000')
+    ap.add_argument('--tb', default=None, help='also log the fit to this TensorBoard logdir (tools/tb.py), e.g. runs')
     args = ap.parse_args(argv)
     if args.games % 2:
         ap.error('--games must be even: games come in mirrored couples')
@@ -317,6 +318,9 @@ def main(argv=None) -> int:
     summary = ratings(rows, anchor=args.anchor)
     fileio.write_json(pathlib.Path(args.ratings or out).with_name('summary.json'), summary)
     report(summary)
+    if args.tb:
+        import tb  # beside this file
+        tb.log_elo(args.tb, summary)
     return 0
 
 

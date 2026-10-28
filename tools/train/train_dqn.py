@@ -36,6 +36,7 @@ from advsim.net import ACTIONS, legal_bits  # noqa: E402
 from advsim.players import Baselines  # noqa: E402
 from advsim.rl import dqn  # noqa: E402
 from league import BASE, NAMES, Evaluator, League, Runner, learner_mask  # noqa: E402
+import tb  # noqa: E402
 
 
 class Replay:
@@ -90,6 +91,7 @@ def main(argv=None) -> None:
     ap.add_argument('--eval-games', type=int, default=2048)
     ap.add_argument('--eval-seed', type=int, default=7, help='the same evaluation teams as train_league.py')
     ap.add_argument('--log-every', type=int, default=200)
+    ap.add_argument('--tb', default=str(tb.RUNS), help="TensorBoard logdir; the run is the --save stem ('': off)")
     args = ap.parse_args(argv)
     if not args.minutes and not args.steps:
         ap.error('give --steps or --minutes')
@@ -111,6 +113,8 @@ def main(argv=None) -> None:
     eps0, eps1 = (float(x) for x in args.eps.split(','))
     curve, updates, loss = [], 0, torch.zeros((), device=dev)
     prev = None
+    algo = ('dueling_' if args.dueling else '') + ('double_dqn' if args.double else 'dqn')
+    w = tb.writer(args.tb, tb.run_name(args.save, algo)) if args.tb else None
     started = t0 = time.time()
 
     step = 0
@@ -172,6 +176,11 @@ def main(argv=None) -> None:
         if step % args.log_every == 0:
             assert torch.isfinite(loss), 'a non-finite loss'
             wr = ' '.join(f'{name[:6]} {float(w):.2f}' for name, w in zip(NAMES, league.base_wr))
+            if w:
+                for k, v in {'train/loss': loss.item(), 'train/epsilon': eps, 'train/updates': updates,
+                             'train/decisions_per_s': args.log_every * B / (time.time() - t0),
+                             **{f'win/{n}': float(x) for n, x in zip(NAMES, league.base_wr)}}.items():
+                    w.add_scalar(k, v, step)
             print(f'step {step:6d}  eps {eps:.3f}  buffer {replay.n:8d}  updates {updates:6d}  loss {loss.item():.4f}  '
                   f'win vs {wr}  {args.log_every * B / (time.time() - t0):,.0f} decisions/s', flush=True)
             t0 = time.time()
@@ -182,10 +191,15 @@ def main(argv=None) -> None:
             net.train()
             curve.append(row)
             print('eval ' + '  '.join(f'{k} {v}' for k, v in row.items()), flush=True)
+            if w:
+                w.add_scalar('eval/maxdamage', row['maxdamage'], step)
+                w.add_scalar('eval/minutes', row['minutes'], step)
             if args.save:
                 stem = pathlib.Path(args.save)
                 fileio.write_text(stem.with_name(stem.stem + '_curve.jsonl'), ''.join(json.dumps(x) + '\n' for x in curve))
                 dqn.save(net, args.save)
+    if w:
+        w.close()
     if args.save:
         dqn.save(net, args.save)
         print(f'saved {args.save}')

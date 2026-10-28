@@ -110,8 +110,28 @@ I/O goes through `advsim/fileio.py` (CONTRIBUTING.md).
   algorithm needs a branch in `elo.play` like the `dqn` one.
 - Record results in `docs/RESULTS.md`.
 
+## TensorBoard
+
+`train_league.py` and `train_dqn.py` log to `runs/<save stem>` by default
+(`--tb DIR` to move it, `--tb ''` to turn it off): `train/*` (loss, entropy or
+epsilon, decisions/s), `win/<baseline>` (the in-training running rates) and
+`eval/*` (the fixed evaluation against maxdamage). The step is decisions per
+battle slot, so PPO (64 per iteration) and DQN share an axis.
+
+```sh
+uv run --group rl python tools/tb.py                  # import artifacts/*_curve.jsonl and artifacts/elo/summary.json
+uv run --group rl python tools/elo.py --add dqn:x --tb runs   # a refit also updates the Elo view
+uv run --group rl tensorboard --logdir runs --port 6006
+ssh -L 6006:localhost:6006 <this box>                 # from a laptop, then open http://localhost:6006
+```
+
+The Elo bracket is the `elo` run: **Text** has the sorted ratings with
+intervals and the head-to-head matrix, **Scalars** has `elo/<player>` at
+step = games in the fit. Importing the same file twice writes its points
+twice; delete `runs/<name>` first to redo one.
+
 ## Checks
 
 ```sh
-uv run --group dev --group rl pytest -q tests/test_policy_eval.py
+uv run --group dev --group rl pytest -q tests/test_policy_eval.py tests/test_dqn.py tests/test_tb.py
 ```

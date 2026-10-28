@@ -173,6 +173,13 @@ each on one RTX A5000 (`dqn_mlp`, `double_dqn_mlp`, 37k and 43k decisions):
   `dqn:mlp` 1570, `double_dqn:mlp` 1568, `maxdamage` 1566. Dueling + double is
   the best of the four by about 20, inside the intervals; head to head it scores
   0.508 against DQN. The architecture does not lift the MLP's ceiling.
+- **Rerun** (the current `artifacts/*dqn_mlp.npz`, logged to TensorBoard): the
+  same four, one after another on one A5000, 30 minutes each, seed 0. Final
+  `eval/maxdamage` 0.53-0.54 for all four. Refit bracket (256 games per pair):
+  `dqn:mlp` 1610 [1575, 1661], `maxdamage` 1595, `double_dqn:mlp` 1588,
+  `dueling_double_dqn:mlp` 1585, `dueling_dqn:mlp` 1584. The order among the
+  four changed from the first run; all sit inside each other's intervals, so
+  none is better than the others.
 
 ## Search
 
