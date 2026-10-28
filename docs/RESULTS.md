@@ -166,6 +166,13 @@ each on one RTX A5000 (`dqn_mlp`, `double_dqn_mlp`, 37k and 43k decisions):
   1558 [1516, 1609], `maxdamage` 1570. Head to head, Double DQN 0.539 against DQN.
   Both level with `maxdamage` and with the PPO MLP (`ppo:league` 1611 in the
   full field); far below the PolicyV2 and transformer networks.
+- **Dueling** (`--dueling`: Q = V + A - mean(A) over all 12 actions), same
+  settings, 30 minutes each: `policy_eval` dueling random 0.969, maxdamage 0.528,
+  switchaverse 0.849; dueling + double 0.970, 0.547, 0.865. In the same bracket
+  refit: `dueling_double_dqn:mlp` 1591 [1555, 1631], `dueling_dqn:mlp` 1574,
+  `dqn:mlp` 1570, `double_dqn:mlp` 1568, `maxdamage` 1566. Dueling + double is
+  the best of the four by about 20, inside the intervals; head to head it scores
+  0.508 against DQN. The architecture does not lift the MLP's ceiling.
 
 ## Search
 

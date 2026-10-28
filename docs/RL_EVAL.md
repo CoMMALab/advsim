@@ -41,7 +41,7 @@ The harness needs `advsim build` and, for the `ppo` policies, the networks in
 |---|---|
 | `random`, `emerald`, `maxdamage`, `status`, `switchaverse` | The scripted baselines, run in the engine's kernel |
 | `ppo[:tag]` | A PPO network, loaded from `artifacts/ppo_<tag>.npz`. With no tag it loads `ppo_baseline.npz`. A tag ending in `.npz` is used as the path. A bare name that isn't registered, like `dmg46`, is also a PPO tag |
-| `dqn[:tag]`, `double_dqn[:tag]` | `advsim.rl.dqn`, from `artifacts/dqn_<tag>.npz` / `double_dqn_<tag>.npz` (`tools/train/train_dqn.py`) |
+| `dqn[:tag]`, `double_dqn[:tag]`, `dueling_dqn[:tag]`, `dueling_double_dqn[:tag]` | `advsim.rl.dqn`, from `artifacts/<name>_<tag>.npz` (`tools/train/train_dqn.py`, `--double`, `--dueling`) |
 | `drqn`, `discrete_sac` | Placeholders that raise `NotImplementedError` |
 
 ## The policy contract
