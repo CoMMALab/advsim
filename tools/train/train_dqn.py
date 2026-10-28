@@ -2,6 +2,7 @@
 
     uv run --group rl python tools/train/train_dqn.py --minutes 30 --save artifacts/dqn_mlp.npz
     uv run --group rl python tools/train/train_dqn.py --double --minutes 30 --save artifacts/double_dqn_mlp.npz
+    uv run --group rl python tools/train/train_dqn.py --dueling --double --minutes 30 --save artifacts/dueling_double_dqn_mlp.npz
 
 Every decision, the learner acts epsilon-greedily wherever it plays (both sides
 in self-play), and each of its transitions (obs, action, reward, next obs on the
@@ -9,7 +10,8 @@ same side) goes into a replay buffer on the GPU. Truncated games are dropped,
 since the next observation already belongs to the next game. Then `--updates`
 minibatches of 1-step Huber TD against a target network synced every
 `--target-every` updates. With --double the online network picks the next
-action and the target network scores it.
+action and the target network scores it. --dueling splits the Q head into a
+value and advantages (advsim.rl.dqn.Net).
 """
 from __future__ import annotations
 
@@ -62,6 +64,7 @@ class Replay:
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--double', action='store_true', help='Double DQN targets')
+    ap.add_argument('--dueling', action='store_true', help='a value head and an advantage head')
     ap.add_argument('--batch', type=int, default=4096, help='battles played at once')
     ap.add_argument('--steps', type=int, default=200_000, help='decisions (unbounded with --minutes)')
     ap.add_argument('--minutes', type=float, default=0, help='stop after this much training time (0: --steps)')
@@ -98,7 +101,7 @@ def main(argv=None) -> None:
     env = Gen3Env(B, device=dev, max_steps=args.max_steps)
     env.reset(seed=args.seed)
     baselines = Baselines(env)
-    net = dqn.Net(args.hidden, args.layers).to(dev)
+    net = dqn.Net(args.hidden, args.layers, dueling=args.dueling).to(dev)
     target = copy.deepcopy(net).eval()
     opt = torch.optim.Adam(net.parameters(), lr=args.lr)
     replay = Replay(args.buffer, dev)

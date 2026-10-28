@@ -17,17 +17,28 @@ from advsim.net import ACTIONS, mlp
 
 
 class Net(nn.Module):
-    """An MLP over the scaled observation, like advsim.net.Policy, with one Q-value per action."""
+    """An MLP over the scaled observation, like advsim.net.Policy, with one Q-value per action.
+    Dueling: a value head and an advantage head, Q = V + A - mean(A) over all 12 actions."""
 
-    def __init__(self, hidden: int = 512, layers: int = 2, inputs: int = L.OBS_DIM) -> None:
+    def __init__(self, hidden: int = 512, layers: int = 2, inputs: int = L.OBS_DIM, dueling: bool = False) -> None:
         super().__init__()
         self.body = mlp(inputs, *[hidden] * layers)
-        self.head = nn.Linear(hidden, ACTIONS)
+        self.dueling = dueling
+        if dueling:
+            self.v, self.adv = nn.Linear(hidden, 1), nn.Linear(hidden, ACTIONS)
+        else:
+            self.head = nn.Linear(hidden, ACTIONS)
 
     def q(self, obs: torch.Tensor, legal: torch.Tensor) -> torch.Tensor:
         """Q-values [n, 12], illegal ones at -1e9."""
         x = obs[..., :self.body[0].in_features].float() / 64.0
-        return self.head(self.body(x)).float().masked_fill(~legal.bool(), -1e9)
+        h = self.body(x)
+        if self.dueling:
+            a = self.adv(h)
+            q = self.v(h) + a - a.mean(-1, keepdim=True)
+        else:
+            q = self.head(h)
+        return q.float().masked_fill(~legal.bool(), -1e9)
 
     def forward(self, obs: torch.Tensor, legal: torch.Tensor):
         """The greedy action as a one-hot Categorical, and no value."""
@@ -46,6 +57,8 @@ def load(path, device) -> Net:
         raise FileNotFoundError(f'{path} missing: train one with tools/train/train_dqn.py --save')
     arrays = fileio.read_npz(path)
     layers = sum(1 for k in arrays if k.startswith('body.') and k.endswith('.weight'))
-    net = Net(hidden=arrays['head.weight'].shape[1], layers=layers, inputs=arrays['body.0.weight'].shape[1])
+    dueling = 'adv.weight' in arrays
+    net = Net(hidden=arrays['adv.weight' if dueling else 'head.weight'].shape[1], layers=layers,
+              inputs=arrays['body.0.weight'].shape[1], dueling=dueling)
     net.load_state_dict({k: torch.from_numpy(np.asarray(v)) for k, v in arrays.items()})
     return net.to(device).eval()
