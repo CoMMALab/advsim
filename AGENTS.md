@@ -17,6 +17,8 @@ one subdirectory per run.
 |---|---|---|
 | `tools/train/train_league.py` (PPO) | `runs/<--save stem>`, or `runs/ppo_<time>` without `--save` | `train/loss`, `train/entropy`, `train/transitions`, `train/decisions_per_s`, `win/<baseline>`, `eval/maxdamage`, `eval/minutes`, `eval/<--eval-ref>` |
 | `tools/train/train_dqn.py` (DQN, `--double`, `--dueling`) | `runs/<--save stem>`, or `runs/<algo>_<time>` | `train/loss`, `train/epsilon`, `train/updates`, `train/decisions_per_s`, `win/<baseline>`, `eval/maxdamage`, `eval/minutes` |
+| `tools/train/train_pg.py` (`--algo reinforce\|grpo`) | `runs/<--save stem>`, or `runs/<algo>_<time>` | `train/loss`, `train/entropy`, `train/kl`, `train/transitions`, `train/finished`, `train/decisions_per_s`, `win/<baseline>`, `eval/maxdamage`, `eval/minutes` |
+| `tools/train/train_discrete_sac.py` | `runs/<--save stem>`, or `runs/discrete_sac_<time>` | `train/critic_loss`, `train/actor_loss`, `train/entropy`, `train/alpha`, `train/updates`, `train/decisions_per_s`, `win/<baseline>`, `eval/maxdamage`, `eval/minutes` |
 | `tools/elo.py --tb runs` | `runs/elo` | `elo/<player>` scalars; text `elo/ratings` (sorted, with 95% intervals) and `elo/head_to_head` |
 | `tools/tb.py` | `runs/<stem>` per `artifacts/*_curve.jsonl`; `runs/elo` from `artifacts/elo/summary.json` | `eval/*` only, for runs trained before logging existed |
 
