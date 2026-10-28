@@ -31,6 +31,6 @@ def test_a_few_steps_train(tmp_path, flags):
     from train import train_dqn
     out = tmp_path / 'dqn_t.npz'
     train_dqn.main(['--batch', '64', '--steps', '30', '--start', '256', '--minibatch', '128', '--buffer', '4096',
-                    '--hidden', '32', '--eval-every', '0', '--log-every', '10', '--save', str(out)]
+                    '--hidden', '32', '--eval-every', '0', '--log-every', '10', '--tb', '', '--save', str(out)]
                    + flags)
     assert out.exists()
