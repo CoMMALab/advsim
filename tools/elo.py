@@ -27,7 +27,9 @@ sets the prior's weight and `-pruneNN` the pruning ratio, in hundredths.
 A network player takes a checkpoint tag after a colon: `ppo:league` and
 `search-64-net:league` use artifacts/ppo_league.npz; no tag is the first
 baseline, artifacts/ppo_baseline.npz. `ppo-t50:v2` plays that network at
-temperature 0.5, `ppo-greedy:v2` takes its top action.
+temperature 0.5, `ppo-greedy:v2` takes its top action. `dqn:mlp` and
+`double_dqn:mlp` load artifacts/dqn_mlp.npz and double_dqn_mlp.npz (advsim.rl.dqn),
+`dueling_dqn:` and `dueling_double_dqn:` likewise.
 """
 from __future__ import annotations
 
@@ -102,13 +104,14 @@ def play(args, pairs: list[tuple[str, str]]) -> list[dict]:
     from advsim.engine import kernels, obs_layout
     from advsim.env import Gen3Env
     from advsim.search.mcts import Search
+    import policy_eval  # beside this file
 
     names = sorted({p for pair in pairs for p in pair}, key=order)
     idx = {n: i for i, n in enumerate(names)}
     per = args.games
     G = len(pairs) * per
     searchers = [n for n in names if n.startswith('search-')]
-    netted = [n for n in names if n.startswith('ppo') or (n in searchers and search_spec(n)[1])]
+    netted = [n for n in names if n.startswith(('ppo', 'dqn', 'double_dqn', 'dueling')) or (n in searchers and search_spec(n)[1])]
     cap = args.capacity if searchers else 0
     dev = args.device
     env = Gen3Env(G + cap * args.lanes, device=dev, rng_mode='paired')
@@ -123,8 +126,9 @@ def play(args, pairs: list[tuple[str, str]]) -> list[dict]:
     search = Search(env, cap, lane_base=G, lanes=args.lanes, nodes=args.lanes * max(
         search_spec(n)[0] for n in searchers), depth=args.depth, rollout=args.rollout,
         key=args.seed) if searchers else None
-    tags = {tag_of(n) for n in netted}
+    tags = {tag_of(n) for n in netted if n.startswith(('ppo', 'search-'))}
     nets = {tag: net_.load(players_.checkpoint(tag), dev) for tag in tags}
+    rl = {n: policy_eval.load(n, dev) for n in netted if n.startswith(('dqn', 'double_dqn', 'dueling'))}
     baselines = players_.Baselines(env)
 
     rng = np.random.default_rng(args.seed)
@@ -163,7 +167,7 @@ def play(args, pairs: list[tuple[str, str]]) -> list[dict]:
                 observed = True
             gi = torch.as_tensor(g_all[mine], device=dev)
             si = torch.as_tensor(s_all[mine], device=dev)
-            player = nets[tag_of(n)]
+            player = rl[n] if n in rl else nets[tag_of(n)]
             if temperature_of(n) != 1.0:
                 player = net_.Tempered(player, temperature_of(n))
             choice[g_all[mine], s_all[mine]] = players_.net_act(

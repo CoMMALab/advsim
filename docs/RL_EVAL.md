@@ -41,7 +41,8 @@ The harness needs `advsim build` and, for the `ppo` policies, the networks in
 |---|---|
 | `random`, `emerald`, `maxdamage`, `status`, `switchaverse` | The scripted baselines, run in the engine's kernel |
 | `ppo[:tag]` | A PPO network, loaded from `artifacts/ppo_<tag>.npz`. With no tag it loads `ppo_baseline.npz`. A tag ending in `.npz` is used as the path. A bare name that isn't registered, like `dmg46`, is also a PPO tag |
-| `dqn`, `double_dqn`, `drqn`, `discrete_sac` | Placeholders that raise `NotImplementedError` |
+| `dqn[:tag]`, `double_dqn[:tag]`, `dueling_dqn[:tag]`, `dueling_double_dqn[:tag]` | `advsim.rl.dqn`, from `artifacts/<name>_<tag>.npz` (`tools/train/train_dqn.py`, `--double`, `--dueling`) |
+| `drqn`, `discrete_sac` | Placeholders that raise `NotImplementedError` |
 
 ## The policy contract
 
@@ -77,8 +78,8 @@ implemented.
 | `artifacts/<algo>_<tag>.npz` | Checkpoints, written through `advsim/fileio.py` |
 | `tests/test_<algo>.py` | A few iterations run, and a save/load round trip matches |
 
-Placeholders with `TODO:` markers exist for `dqn` (which covers Double DQN through
-`train_dqn.py --double`, since only the target differs), `drqn` and `discrete_sac`. The
+DQN and Double DQN are implemented (`advsim/rl/dqn.py`, `train_dqn.py --double`).
+Placeholders with `TODO:` markers exist for `drqn` and `discrete_sac`. The
 harness already loads `<algo>[:tag]` through `advsim.rl.<algo>.load`, so a
 policy is ready to score once `Net.forward` and `load` are implemented.
 
@@ -105,8 +106,8 @@ I/O goes through `advsim/fileio.py` (CONTRIBUTING.md).
 - At 4096 games, the standard error of a score near 0.5 is about 0.008.
   Treat differences under about 0.02 as noise, or raise `--games`.
 - For a single rating across many players, use the Elo bracket
-  (`tools/elo.py`). It only knows its own player names, so a new algorithm
-  needs a branch in `elo.play` next to the `ppo` one.
+  (`tools/elo.py`). It knows `ppo`, `search-*`, `dqn` and `double_dqn`; a new
+  algorithm needs a branch in `elo.play` like the `dqn` one.
 - Record results in `docs/RESULTS.md`.
 
 ## Checks
