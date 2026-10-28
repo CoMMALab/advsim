@@ -29,7 +29,7 @@ A network player takes a checkpoint tag after a colon: `ppo:league` and
 baseline, artifacts/ppo_baseline.npz. `ppo-t50:v2` plays that network at
 temperature 0.5, `ppo-greedy:v2` takes its top action. `dqn:mlp` and
 `double_dqn:mlp` load artifacts/dqn_mlp.npz and double_dqn_mlp.npz (advsim.rl.dqn),
-`dueling_dqn:` and `dueling_double_dqn:` likewise.
+`dueling_dqn:`, `dueling_double_dqn:`, `reinforce:`, `grpo:` and `discrete_sac:` likewise.
 """
 from __future__ import annotations
 
@@ -48,6 +48,7 @@ sys.path.insert(0, str(ROOT))
 from advsim import fileio  # noqa: E402
 from advsim.players import BASELINES  # noqa: E402
 
+RL = ('dqn', 'double_dqn', 'dueling', 'reinforce', 'grpo', 'discrete_sac')  # loaded through policy_eval
 PLAYERS = ['random', 'emerald', 'maxdamage', 'status', 'switchaverse', 'ppo', 'search-32', 'search-64', 'search-128']
 OUT = fileio.ARTIFACTS / 'elo'
 
@@ -111,7 +112,7 @@ def play(args, pairs: list[tuple[str, str]]) -> list[dict]:
     per = args.games
     G = len(pairs) * per
     searchers = [n for n in names if n.startswith('search-')]
-    netted = [n for n in names if n.startswith(('ppo', 'dqn', 'double_dqn', 'dueling')) or (n in searchers and search_spec(n)[1])]
+    netted = [n for n in names if n.startswith(('ppo',) + RL) or (n in searchers and search_spec(n)[1])]
     cap = args.capacity if searchers else 0
     dev = args.device
     env = Gen3Env(G + cap * args.lanes, device=dev, rng_mode='paired')
@@ -128,7 +129,7 @@ def play(args, pairs: list[tuple[str, str]]) -> list[dict]:
         key=args.seed) if searchers else None
     tags = {tag_of(n) for n in netted if n.startswith(('ppo', 'search-'))}
     nets = {tag: net_.load(players_.checkpoint(tag), dev) for tag in tags}
-    rl = {n: policy_eval.load(n, dev) for n in netted if n.startswith(('dqn', 'double_dqn', 'dueling'))}
+    rl = {n: policy_eval.load(n, dev) for n in netted if n.startswith(RL)}
     baselines = players_.Baselines(env)
 
     rng = np.random.default_rng(args.seed)
