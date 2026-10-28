@@ -23,6 +23,7 @@ dependencies = [
 bench = ["jax[cuda12]>=0.11; sys_platform == 'linux'"]
 dev = ["pytest>=8"]
 rl = [
+    "tensorboard>=2.21.0",
     "torch>=2.14.0",
 ]
 
