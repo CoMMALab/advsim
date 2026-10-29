@@ -1,0 +1,71 @@
+Warp 1.17.0 initialized:
+   CUDA Toolkit 12.9, Driver 13.0
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA GeForce RTX 4090" (24 GiB, sm_89, mempool enabled)
+   Kernel cache:
+     /root/.cache/warp/1.17.0
+Module advsim.engine.kernels 71fce79 load on device 'cuda:0' took 20.38 ms  (cached)
+Module advsim.engine.kernels_search 7754ce1 load on device 'cuda:0' took 13.19 ms  (cached)
+decision    0:  57344 games live,      0s
+decision   25:  44188 games live,      2s
+decision   50:  11365 games live,      3s
+decision   75:   5215 games live,      3s
+decision  100:   2610 games live,      4s
+decision  125:   1302 games live,      4s
+decision  150:    673 games live,      4s
+decision  175:    353 games live,      5s
+decision  200:    198 games live,      5s
+decision  225:    111 games live,      5s
+decision  250:     71 games live,      6s
+decision  275:     45 games live,      6s
+decision  300:     26 games live,      6s
+decision  325:     20 games live,      6s
+decision  350:     13 games live,      6s
+decision  375:      8 games live,      6s
+decision  400:      6 games live,      6s
+decision  425:      5 games live,      6s
+decision  450:      4 games live,      6s
+decision  475:      4 games live,      6s
+decision  500:      4 games live,      6s
+decision  525:      4 games live,      6s
+decision  550:      4 games live,      6s
+decision  575:      4 games live,      6s
+decision  600:      4 games live,      6s
+decision  625:      4 games live,      6s
+decision  650:      4 games live,      6s
+decision  675:      3 games live,      6s
+decision  700:      3 games live,      6s
+decision  725:      3 games live,      6s
+decision  750:      3 games live,      6s
+decision  775:      3 games live,      6s
+decision  800:      3 games live,      6s
+decision  825:      3 games live,      6s
+decision  850:      3 games live,      6s
+decision  875:      2 games live,      6s
+decision  900:      2 games live,      6s
+decision  925:      2 games live,      6s
+decision  950:      1 games live,      6s
+decision  975:      1 games live,      7s
+57344 games in 7s; 1 hit the decision cap
+
+player            elo   95% interval
+ppo-t25:ppo30    2103   [ 2085,  2125]
+ppo-t25:a2c30    1852   [ 1834,  1870]
+ppo-t25:reinforce30   1793   [ 1775,  1813]
+maxdamage        1598   [ 1583,  1620]
+switchaverse     1300   [ 1288,  1313]
+emerald          1003   [  993,  1015]
+random           1000   [ 1000,  1000]
+status            756   [  744,   768]
+
+row player's score against column player
+               ppo-t25: ppo-t25: ppo-t25: maxdamag switchav  emerald   random   status
+ppo-t25:ppo30         -    0.817    0.848    0.947    0.994    0.997    0.998    1.000
+ppo-t25:a2c30     0.183        -    0.598    0.804    0.969    0.990    0.990    0.994
+ppo-t25:reinforce30    0.152    0.402        -    0.755    0.959    0.988    0.984    0.996
+maxdamage         0.053    0.196    0.245        -    0.854    0.971    0.966    0.978
+switchaverse      0.006    0.031    0.041    0.146        -    0.854    0.870    0.962
+emerald           0.003    0.010    0.012    0.029    0.146        -    0.505    0.809
+random            0.002    0.010    0.016    0.034    0.130    0.495        -    0.814
+status            0.000    0.006    0.004    0.022    0.038    0.191    0.186        -
