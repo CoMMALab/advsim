@@ -242,3 +242,33 @@ re-plays its path from a freshly determinized copy of the root.
 
 Rating a search player takes 40 minutes to 3 hours; a transformer under
 search needs `--capacity 4096` on a 12 GB card.
+
+## All baselines on the 2x512 MLP, one bracket (2026-10-29)
+
+A2C and train_league REINFORCE (`tools/train/algos.py`) retrained on the MLP, 30 minutes each, GPU 3
+(`train_league.py --algo a2c|reinforce --arch mlp`, REINFORCE with `--steps 400`). Final eval vs
+maxdamage: A2C 0.386, REINFORCE 0.165. Bracket: `elo.py --games 512`, 18 players, 78,336 games, 46 minutes.
+
+| player | Elo | 95% |
+|---|---|---|
+| ppo:dmg46 (transformer) | 2198 | 2172–2230 |
+| search-32-net:dmg46 | 1708 | 1695–1726 |
+| ppo:mlp | 1604 | 1588–1621 |
+| dqn:mlp | 1599 | 1584–1615 |
+| double_dqn:mlp | 1598 | 1583–1614 |
+| discrete_sac:mlp | 1588 | 1574–1604 |
+| dueling_dqn:mlp | 1588 | 1576–1604 |
+| dueling_double_dqn:mlp | 1587 | 1573–1603 |
+| maxdamage | 1581 | 1566–1597 |
+| ppo:a2c_mlp | 1511 | 1497–1527 |
+| grpo:mlp | 1405 | 1389–1421 |
+| search-32 | 1386 | 1373–1401 |
+| switchaverse | 1304 | 1290–1317 |
+| ppo:reinforce_mlp | 1296 | 1282–1310 |
+| reinforce:mlp | 1296 | 1282–1311 |
+| emerald | 1005 | 989–1019 |
+| random | 1000 | — |
+| status | 773 | 751–794 |
+
+PPO, the DQN family and discrete SAC are tied around maxdamage. A2C is about 90 below them, and both
+REINFORCE implementations land on the same rating.
