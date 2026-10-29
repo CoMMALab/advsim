@@ -207,6 +207,13 @@ Same MLP (2x512), league mix (0.5 self, 0.25 snapshots, 0.25 baselines), seed 0,
   score against maxdamage, but both stay far below the value-based methods in
   30 minutes. The off-policy methods (DQN, discrete SAC) all stop at the same
   level as maxdamage.
+- **PPO on the same MLP** (`train_league.py --arch mlp`, defaults otherwise,
+  30 minutes, `ppo_mlp`): `eval/maxdamage` 0.46 at 6 minutes, 0.54 at the end.
+  `policy_eval` random 0.975, maxdamage 0.537, switchaverse 0.871. Elo 1600
+  [1564, 1631], inside the DQN/SAC cluster (1580-1609) and level with
+  `maxdamage` (1598). At 30 minutes on a 2x512 MLP, PPO, DQN and discrete SAC
+  are indistinguishable; the gap to `ppo:dmg46` (2177) comes from the
+  transformer, the 80 hours of training, or both.
 
 ## Search
 
