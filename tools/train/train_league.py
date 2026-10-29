@@ -1,4 +1,4 @@
-"""Actor-critic RL (PPO by default, --algo a2c) in a league: self-play, past snapshots and the five baselines.
+"""Actor-critic RL (PPO by default; --algo a2c or reinforce) in a league: self-play, past snapshots and the five baselines.
 
     uv run --group rl python tools/train/train_league.py --anneal --minutes 120 --save artifacts/ppo_x.npz
     uv run --group rl python tools/train/train_league.py --init dmg46 --lr 1e-4 --anneal --minutes 1380 --save ...
@@ -224,9 +224,9 @@ def main(argv=None) -> None:
             with amp():
                 _, last_val = net(obs.reshape(B * 2, -1), legal_bits(mask).view(B * 2, -1))
         buf = {k: torch.stack(v) for k, v in buf.items() if v}
-        adv, ret = gae(buf['rew'], buf['val'], buf['done'], buf['trunc'], last_val.view(B, 2), args.gamma, args.lam)
+        adv, ret, keep = algo.advantages(buf, last_val.view(B, 2))
 
-        sel = buf['mine'].reshape(-1)
+        sel = (buf['mine'] & keep).reshape(-1)
         flat = {k: v.reshape(T * B * 2, *v.shape[3:])[sel] for k, v in buf.items()
                 if k in ('obs', 'legal', 'act', 'logp', 'foe_act')}
         a, r_ = adv.reshape(-1)[sel], ret.reshape(-1)[sel]

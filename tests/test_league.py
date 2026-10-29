@@ -133,3 +133,22 @@ def test_the_defaults_are_the_recipe(tmp_path):
     tl.main(['--device', 'cpu', '--no-compile', '--batch', '16', '--steps', '8', '--iters', '1', '--minibatch', '64',
              '--eval-every', '0', '--save', str(out)])
     assert net_.load(out, 'cpu').config == (96, 3, 4, 1, 1, 1)
+
+
+def test_reinforce_keeps_only_the_steps_of_games_that_ended_in_the_rollout():
+    import types
+
+    from algos import Reinforce
+    T = 6
+    rew = torch.zeros(T, 1, 2)
+    rew[1, 0] = torch.tensor([1.0, -1.0])  # a game ends at step 1; the next runs to the end of the rollout
+    done = torch.tensor([[False], [True], [False], [False], [False], [False]])
+    trunc = torch.zeros(T, 1, dtype=torch.bool)
+    args = types.SimpleNamespace(gamma=0.5, steps=T, max_steps=T)
+    ret, _, keep = Reinforce(args).advantages({'rew': rew, 'done': done, 'trunc': trunc}, torch.zeros(1, 2))
+    assert keep[:, 0, 0].tolist() == [True, True, False, False, False, False]
+    assert ret[1, 0].tolist() == [1.0, -1.0] and ret[0, 0].tolist() == [0.5, -0.5]  # discounted back, no value used
+    trunc[3] = True  # a game cut at --max-steps never resolves
+    done2 = torch.tensor([[False], [True], [False], [False], [True], [False]])
+    _, _, keep2 = Reinforce(args).advantages({'rew': rew, 'done': done2, 'trunc': trunc}, torch.zeros(1, 2))
+    assert keep2[:, 0, 0].tolist() == [True, True, False, False, True, False]
