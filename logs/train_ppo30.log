@@ -1,3 +1,15 @@
+   Building advsim @ file:///src
+Downloading grpcio (7.0MiB)
+Downloading pillow (6.8MiB)
+Downloading tensorboard (5.3MiB)
+Downloading tensorboard-data-server (6.3MiB)
+      Built advsim @ file:///src
+ Downloaded tensorboard
+ Downloaded tensorboard-data-server
+ Downloaded pillow
+ Downloaded grpcio
+Uninstalled 1 package in 0.81ms
+Installed 9 packages in 21ms
 Warp 1.17.0 initialized:
    CUDA Toolkit 12.9, Driver 13.0
    Devices:
@@ -5,70 +17,72 @@ Warp 1.17.0 initialized:
      "cuda:0"   : "NVIDIA GeForce RTX 4090" (24 GiB, sm_89, mempool enabled)
    Kernel cache:
      /root/.cache/warp/1.17.0
-Module advsim.engine.kernels 71fce79 load on device 'cuda:0' took 27.62 ms  (cached)
+Module advsim.engine.kernels 71fce79 load on device 'cuda:0' took 20.86 ms  (cached)
 /src/artifacts/ppo_long.npz missing: evaluating against maxdamage only
-Module advsim.engine.kernels_search 7754ce1 load on device 'cuda:0' took 19.60 ms  (cached)
-iter    0  transitions  434649  loss +0.242  entropy 1.918  win vs random 0.47 emeral 0.40 maxdam 0.07 status 0.60 switch 0.13  snaps -  3,988 decisions/s
-iter   10  transitions  391417  loss +0.189  entropy 1.130  win vs random 0.97 emeral 0.93 maxdam 0.42 status 0.98 switch 0.83  snaps -  94,828 decisions/s
-iter   20  transitions  382536  loss +0.170  entropy 0.703  win vs random 0.97 emeral 0.99 maxdam 0.64 status 1.00 switch 0.85  snaps -  96,669 decisions/s
-iter   30  transitions  324835  loss +0.158  entropy 0.472  win vs random 0.98 emeral 1.00 maxdam 0.71 status 1.00 switch 0.99  snaps 0.56  107,648 decisions/s
-iter   40  transitions  323047  loss +0.167  entropy 0.430  win vs random 1.00 emeral 1.00 maxdam 0.78 status 1.00 switch 0.97  snaps 0.60  108,453 decisions/s
-iter   50  transitions  327518  loss +0.174  entropy 0.387  win vs random 1.00 emeral 1.00 maxdam 0.79 status 1.00 switch 1.00  snaps 0.58  103,770 decisions/s
-iter   60  transitions  329542  loss +0.150  entropy 0.420  win vs random 1.00 emeral 1.00 maxdam 0.81 status 1.00 switch 0.97  snaps 0.59  103,617 decisions/s
-iter   70  transitions  331529  loss +0.155  entropy 0.399  win vs random 1.00 emeral 0.98 maxdam 0.82 status 1.00 switch 0.96  snaps 0.65  103,411 decisions/s
-iter   80  transitions  338486  loss +0.175  entropy 0.417  win vs random 1.00 emeral 1.00 maxdam 0.84 status 1.00 switch 0.99  snaps 0.61  99,067 decisions/s
-iter   90  transitions  356680  loss +0.182  entropy 0.427  win vs random 0.99 emeral 0.96 maxdam 0.83 status 1.00 switch 0.99  snaps 0.65  95,128 decisions/s
-eval iter 100  minutes 5.86  maxdamage 0.848388671875
-iter  100  transitions  372303  loss +0.217  entropy 0.454  win vs random 0.95 emeral 1.00 maxdam 0.82 status 1.00 switch 0.99  snaps 0.59  89,355 decisions/s
-iter  110  transitions  365952  loss +0.134  entropy 0.435  win vs random 1.00 emeral 1.00 maxdam 0.82 status 1.00 switch 0.97  snaps 0.63  91,307 decisions/s
-iter  120  transitions  364358  loss +0.188  entropy 0.434  win vs random 0.98 emeral 1.00 maxdam 0.87 status 1.00 switch 0.98  snaps 0.60  91,283 decisions/s
-iter  130  transitions  350953  loss +0.167  entropy 0.390  win vs random 1.00 emeral 1.00 maxdam 0.88 status 1.00 switch 0.98  snaps 0.66  92,571 decisions/s
-iter  140  transitions  345185  loss +0.184  entropy 0.387  win vs random 1.00 emeral 1.00 maxdam 0.88 status 1.00 switch 1.00  snaps 0.63  93,729 decisions/s
-iter  150  transitions  345524  loss +0.200  entropy 0.405  win vs random 1.00 emeral 0.99 maxdam 0.89 status 1.00 switch 1.00  snaps 0.62  91,502 decisions/s
-iter  160  transitions  352634  loss +0.188  entropy 0.377  win vs random 1.00 emeral 1.00 maxdam 0.90 status 1.00 switch 0.99  snaps 0.64  90,006 decisions/s
-iter  170  transitions  352618  loss +0.171  entropy 0.368  win vs random 1.00 emeral 1.00 maxdam 0.90 status 1.00 switch 1.00  snaps 0.64  90,079 decisions/s
-iter  180  transitions  350080  loss +0.154  entropy 0.390  win vs random 1.00 emeral 1.00 maxdam 0.90 status 1.00 switch 1.00  snaps 0.64  88,704 decisions/s
-iter  190  transitions  353175  loss +0.145  entropy 0.403  win vs random 1.00 emeral 1.00 maxdam 0.91 status 1.00 switch 1.00  snaps 0.64  87,978 decisions/s
-eval iter 200  minutes 10.69  maxdamage 0.90673828125
-iter  200  transitions  348852  loss +0.152  entropy 0.390  win vs random 1.00 emeral 1.00 maxdam 0.91 status 1.00 switch 0.97  snaps 0.66  87,042 decisions/s
-iter  210  transitions  349285  loss +0.148  entropy 0.374  win vs random 1.00 emeral 0.99 maxdam 0.90 status 1.00 switch 1.00  snaps 0.63  87,070 decisions/s
-iter  220  transitions  349259  loss +0.138  entropy 0.382  win vs random 1.00 emeral 1.00 maxdam 0.93 status 1.00 switch 1.00  snaps 0.67  87,043 decisions/s
-iter  230  transitions  352027  loss +0.172  entropy 0.388  win vs random 1.00 emeral 1.00 maxdam 0.92 status 1.00 switch 1.00  snaps 0.65  84,731 decisions/s
-iter  240  transitions  351773  loss +0.156  entropy 0.391  win vs random 1.00 emeral 1.00 maxdam 0.93 status 1.00 switch 0.97  snaps 0.66  85,030 decisions/s
-iter  250  transitions  352545  loss +0.065  entropy 0.378  win vs random 1.00 emeral 1.00 maxdam 0.92 status 1.00 switch 1.00  snaps 0.63  75,555 decisions/s
-iter  260  transitions  348511  loss +0.147  entropy 0.386  win vs random 0.99 emeral 1.00 maxdam 0.91 status 1.00 switch 0.99  snaps 0.65  83,055 decisions/s
-iter  270  transitions  351652  loss +0.146  entropy 0.390  win vs random 1.00 emeral 1.00 maxdam 0.93 status 1.00 switch 1.00  snaps 0.66  82,995 decisions/s
-iter  280  transitions  355045  loss +0.131  entropy 0.393  win vs random 1.00 emeral 1.00 maxdam 0.92 status 1.00 switch 0.97  snaps 0.63  81,601 decisions/s
-iter  290  transitions  355665  loss +0.154  entropy 0.403  win vs random 1.00 emeral 1.00 maxdam 0.92 status 1.00 switch 0.99  snaps 0.59  82,386 decisions/s
-eval iter 300  minutes 16.02  maxdamage 0.9267578125
-iter  300  transitions  360987  loss +0.158  entropy 0.388  win vs random 1.00 emeral 1.00 maxdam 0.91 status 1.00 switch 1.00  snaps 0.60  81,540 decisions/s
-iter  310  transitions  359496  loss +0.133  entropy 0.403  win vs random 1.00 emeral 1.00 maxdam 0.93 status 1.00 switch 0.99  snaps 0.63  81,516 decisions/s
-iter  320  transitions  362032  loss +0.120  entropy 0.417  win vs random 1.00 emeral 1.00 maxdam 0.95 status 1.00 switch 0.99  snaps 0.63  81,478 decisions/s
-iter  330  transitions  358411  loss +0.118  entropy 0.416  win vs random 1.00 emeral 1.00 maxdam 0.93 status 1.00 switch 1.00  snaps 0.58  81,957 decisions/s
-iter  340  transitions  360853  loss +0.173  entropy 0.419  win vs random 1.00 emeral 1.00 maxdam 0.93 status 0.98 switch 1.00  snaps 0.61  81,796 decisions/s
-iter  350  transitions  360792  loss +0.106  entropy 0.397  win vs random 1.00 emeral 0.99 maxdam 0.94 status 1.00 switch 0.98  snaps 0.60  81,648 decisions/s
-iter  360  transitions  359945  loss +0.158  entropy 0.380  win vs random 0.99 emeral 1.00 maxdam 0.93 status 1.00 switch 1.00  snaps 0.59  81,910 decisions/s
-iter  370  transitions  361298  loss +0.173  entropy 0.365  win vs random 0.99 emeral 1.00 maxdam 0.94 status 1.00 switch 0.98  snaps 0.58  81,602 decisions/s
-iter  380  transitions  360411  loss +0.128  entropy 0.380  win vs random 1.00 emeral 1.00 maxdam 0.94 status 1.00 switch 1.00  snaps 0.58  81,746 decisions/s
-iter  390  transitions  358656  loss +0.162  entropy 0.378  win vs random 1.00 emeral 1.00 maxdam 0.94 status 1.00 switch 0.99  snaps 0.57  82,098 decisions/s
-eval iter 400  minutes 21.36  maxdamage 0.924560546875
-iter  400  transitions  358338  loss +0.146  entropy 0.383  win vs random 1.00 emeral 1.00 maxdam 0.93 status 1.00 switch 1.00  snaps 0.57  82,295 decisions/s
-iter  410  transitions  356195  loss +0.155  entropy 0.362  win vs random 0.98 emeral 0.99 maxdam 0.94 status 1.00 switch 1.00  snaps 0.56  82,045 decisions/s
-iter  420  transitions  355979  loss +0.187  entropy 0.365  win vs random 1.00 emeral 0.99 maxdam 0.94 status 1.00 switch 1.00  snaps 0.58  82,742 decisions/s
-iter  430  transitions  356854  loss +0.162  entropy 0.371  win vs random 1.00 emeral 0.99 maxdam 0.94 status 1.00 switch 0.98  snaps 0.58  82,302 decisions/s
-iter  440  transitions  365469  loss +0.131  entropy 0.361  win vs random 1.00 emeral 1.00 maxdam 0.94 status 1.00 switch 0.99  snaps 0.58  80,986 decisions/s
-iter  450  transitions  359654  loss +0.155  entropy 0.351  win vs random 1.00 emeral 1.00 maxdam 0.93 status 1.00 switch 1.00  snaps 0.57  81,876 decisions/s
-iter  460  transitions  360059  loss +0.150  entropy 0.347  win vs random 1.00 emeral 1.00 maxdam 0.92 status 1.00 switch 0.96  snaps 0.56  82,094 decisions/s
-iter  470  transitions  358661  loss +0.145  entropy 0.330  win vs random 0.99 emeral 0.97 maxdam 0.94 status 1.00 switch 0.99  snaps 0.56  82,085 decisions/s
-iter  480  transitions  358218  loss +0.147  entropy 0.327  win vs random 1.00 emeral 1.00 maxdam 0.93 status 1.00 switch 1.00  snaps 0.57  81,922 decisions/s
-iter  490  transitions  360455  loss +0.376  entropy 0.458  win vs random 1.00 emeral 1.00 maxdam 0.94 status 1.00 switch 1.00  snaps 0.58  81,161 decisions/s
-eval iter 500  minutes 26.7  maxdamage 0.9404296875
-iter  500  transitions  359278  loss +0.149  entropy 0.330  win vs random 0.99 emeral 1.00 maxdam 0.94 status 1.00 switch 1.00  snaps 0.56  82,066 decisions/s
-iter  510  transitions  359532  loss +0.165  entropy 0.328  win vs random 1.00 emeral 1.00 maxdam 0.94 status 0.99 switch 1.00  snaps 0.51  81,626 decisions/s
-iter  520  transitions  356227  loss +0.155  entropy 0.325  win vs random 1.00 emeral 1.00 maxdam 0.95 status 1.00 switch 1.00  snaps 0.56  82,479 decisions/s
-iter  530  transitions  359662  loss +0.143  entropy 0.319  win vs random 1.00 emeral 1.00 maxdam 0.94 status 1.00 switch 0.96  snaps 0.53  82,080 decisions/s
-iter  540  transitions  359656  loss +0.158  entropy 0.316  win vs random 1.00 emeral 1.00 maxdam 0.94 status 1.00 switch 1.00  snaps 0.55  81,672 decisions/s
-iter  550  transitions  357076  loss +0.145  entropy 0.306  win vs random 1.00 emeral 1.00 maxdam 0.92 status 1.00 switch 1.00  snaps 0.56  82,369 decisions/s
-iter  560  transitions  359768  loss +0.154  entropy 0.305  win vs random 1.00 emeral 1.00 maxdam 0.93 status 1.00 switch 0.99  snaps 0.54  81,678 decisions/s
-eval iter 563  minutes 30.06  maxdamage 0.9404296875
+Module advsim.engine.kernels_search 7754ce1 load on device 'cuda:0' took 13.30 ms  (cached)
+iter    0  transitions  434742  loss +0.173  entropy 1.925  win vs random 0.44 emeral 0.40 maxdam 0.08 status 0.60 switch 0.15  snaps -  19,769 decisions/s
+iter   10  transitions  393441  loss +0.314  entropy 1.243  win vs random 0.97 emeral 0.92 maxdam 0.37 status 0.96 switch 0.86  snaps -  93,991 decisions/s
+iter   20  transitions  385087  loss +0.205  entropy 0.743  win vs random 1.00 emeral 0.99 maxdam 0.66 status 1.00 switch 0.98  snaps -  95,672 decisions/s
+iter   30  transitions  329534  loss +0.182  entropy 0.566  win vs random 1.00 emeral 1.00 maxdam 0.75 status 1.00 switch 0.94  snaps 0.54  106,464 decisions/s
+iter   40  transitions  326006  loss +0.192  entropy 0.488  win vs random 1.00 emeral 1.00 maxdam 0.77 status 1.00 switch 0.99  snaps 0.58  107,544 decisions/s
+iter   50  transitions  325806  loss +0.150  entropy 0.400  win vs random 0.99 emeral 1.00 maxdam 0.80 status 1.00 switch 0.98  snaps 0.56  105,043 decisions/s
+iter   60  transitions  329360  loss +0.209  entropy 0.387  win vs random 1.00 emeral 0.99 maxdam 0.81 status 1.00 switch 0.96  snaps 0.60  104,228 decisions/s
+iter   70  transitions  331924  loss +0.170  entropy 0.360  win vs random 0.99 emeral 1.00 maxdam 0.84 status 0.99 switch 1.00  snaps 0.64  103,506 decisions/s
+iter   80  transitions  330081  loss +0.151  entropy 0.358  win vs random 1.00 emeral 1.00 maxdam 0.84 status 1.00 switch 1.00  snaps 0.59  101,884 decisions/s
+iter   90  transitions  332721  loss +0.176  entropy 0.374  win vs random 1.00 emeral 1.00 maxdam 0.85 status 1.00 switch 0.98  snaps 0.60  100,425 decisions/s
+eval iter 100  minutes 4.56  maxdamage 0.86767578125
+iter  100  transitions  341662  loss +0.170  entropy 0.395  win vs random 1.00 emeral 1.00 maxdam 0.87 status 1.00 switch 0.99  snaps 0.56  96,219 decisions/s
+iter  110  transitions  343239  loss +0.136  entropy 0.394  win vs random 1.00 emeral 1.00 maxdam 0.88 status 1.00 switch 1.00  snaps 0.60  96,136 decisions/s
+iter  120  transitions  350357  loss +0.167  entropy 0.390  win vs random 1.00 emeral 1.00 maxdam 0.87 status 1.00 switch 0.98  snaps 0.63  94,677 decisions/s
+iter  130  transitions  350330  loss +0.156  entropy 0.407  win vs random 1.00 emeral 0.97 maxdam 0.89 status 1.00 switch 0.97  snaps 0.61  92,579 decisions/s
+iter  140  transitions  356539  loss +0.139  entropy 0.382  win vs random 1.00 emeral 1.00 maxdam 0.90 status 1.00 switch 0.98  snaps 0.63  91,527 decisions/s
+iter  150  transitions  353768  loss +0.186  entropy 0.399  win vs random 1.00 emeral 0.99 maxdam 0.91 status 1.00 switch 1.00  snaps 0.62  90,014 decisions/s
+iter  160  transitions  357233  loss +0.172  entropy 0.424  win vs random 1.00 emeral 1.00 maxdam 0.92 status 1.00 switch 1.00  snaps 0.62  89,512 decisions/s
+iter  170  transitions  362397  loss +0.157  entropy 0.457  win vs random 1.00 emeral 1.00 maxdam 0.89 status 1.00 switch 1.00  snaps 0.63  88,462 decisions/s
+iter  180  transitions  354373  loss +0.145  entropy 0.422  win vs random 1.00 emeral 1.00 maxdam 0.91 status 1.00 switch 0.98  snaps 0.67  88,290 decisions/s
+iter  190  transitions  361001  loss +0.231  entropy 0.465  win vs random 1.00 emeral 0.99 maxdam 0.88 status 1.00 switch 1.00  snaps 0.63  86,891 decisions/s
+eval iter 200  minutes 9.4  maxdamage 0.906982421875
+iter  200  transitions  363650  loss +0.169  entropy 0.463  win vs random 1.00 emeral 1.00 maxdam 0.92 status 1.00 switch 0.98  snaps 0.62  84,784 decisions/s
+iter  210  transitions  360503  loss -0.013  entropy 0.376  win vs random 1.00 emeral 1.00 maxdam 0.89 status 1.00 switch 0.99  snaps 0.66  85,486 decisions/s
+iter  220  transitions  359174  loss +0.143  entropy 0.435  win vs random 1.00 emeral 1.00 maxdam 0.89 status 1.00 switch 1.00  snaps 0.62  85,792 decisions/s
+iter  230  transitions  363721  loss +0.167  entropy 0.443  win vs random 1.00 emeral 1.00 maxdam 0.92 status 1.00 switch 1.00  snaps 0.62  83,310 decisions/s
+iter  240  transitions  361150  loss +0.154  entropy 0.475  win vs random 1.00 emeral 1.00 maxdam 0.91 status 1.00 switch 1.00  snaps 0.63  83,835 decisions/s
+iter  250  transitions  353260  loss +0.122  entropy 0.447  win vs random 1.00 emeral 1.00 maxdam 0.89 status 1.00 switch 0.97  snaps 0.61  83,220 decisions/s
+iter  260  transitions  352697  loss +0.155  entropy 0.422  win vs random 1.00 emeral 1.00 maxdam 0.91 status 1.00 switch 1.00  snaps 0.64  83,470 decisions/s
+iter  270  transitions  354116  loss +0.128  entropy 0.418  win vs random 0.98 emeral 1.00 maxdam 0.93 status 1.00 switch 0.97  snaps 0.66  83,225 decisions/s
+iter  280  transitions  352888  loss +0.138  entropy 0.408  win vs random 1.00 emeral 1.00 maxdam 0.92 status 1.00 switch 0.99  snaps 0.64  83,196 decisions/s
+iter  290  transitions  352598  loss +0.136  entropy 0.402  win vs random 0.97 emeral 1.00 maxdam 0.91 status 1.00 switch 0.95  snaps 0.62  83,364 decisions/s
+eval iter 300  minutes 14.62  maxdamage 0.912353515625
+iter  300  transitions  352913  loss +0.173  entropy 0.424  win vs random 1.00 emeral 1.00 maxdam 0.93 status 1.00 switch 0.96  snaps 0.58  83,574 decisions/s
+iter  310  transitions  351589  loss +0.153  entropy 0.393  win vs random 1.00 emeral 1.00 maxdam 0.92 status 0.98 switch 0.98  snaps 0.62  83,485 decisions/s
+iter  320  transitions  353510  loss +0.143  entropy 0.424  win vs random 1.00 emeral 1.00 maxdam 0.92 status 1.00 switch 1.00  snaps 0.63  83,167 decisions/s
+iter  330  transitions  356012  loss +0.123  entropy 0.418  win vs random 1.00 emeral 1.00 maxdam 0.93 status 0.98 switch 1.00  snaps 0.62  83,016 decisions/s
+iter  340  transitions  355976  loss +0.123  entropy 0.407  win vs random 1.00 emeral 1.00 maxdam 0.93 status 1.00 switch 1.00  snaps 0.59  82,712 decisions/s
+iter  350  transitions  359266  loss +0.166  entropy 0.404  win vs random 1.00 emeral 1.00 maxdam 0.91 status 1.00 switch 0.96  snaps 0.60  82,383 decisions/s
+iter  360  transitions  355451  loss +0.143  entropy 0.396  win vs random 1.00 emeral 1.00 maxdam 0.92 status 1.00 switch 0.97  snaps 0.57  82,860 decisions/s
+iter  370  transitions  360743  loss +0.158  entropy 0.398  win vs random 1.00 emeral 1.00 maxdam 0.92 status 1.00 switch 0.97  snaps 0.59  82,125 decisions/s
+iter  380  transitions  357265  loss +0.166  entropy 0.388  win vs random 1.00 emeral 0.98 maxdam 0.93 status 1.00 switch 1.00  snaps 0.59  82,719 decisions/s
+iter  390  transitions  356534  loss +0.152  entropy 0.394  win vs random 1.00 emeral 1.00 maxdam 0.93 status 1.00 switch 1.00  snaps 0.59  83,059 decisions/s
+eval iter 400  minutes 19.91  maxdamage 0.92431640625
+iter  400  transitions  358239  loss +0.144  entropy 0.387  win vs random 1.00 emeral 0.99 maxdam 0.92 status 1.00 switch 0.99  snaps 0.55  82,428 decisions/s
+iter  410  transitions  361040  loss +0.164  entropy 0.395  win vs random 1.00 emeral 1.00 maxdam 0.93 status 1.00 switch 0.98  snaps 0.57  82,004 decisions/s
+iter  420  transitions  358431  loss +0.135  entropy 0.374  win vs random 1.00 emeral 1.00 maxdam 0.94 status 1.00 switch 0.99  snaps 0.54  82,065 decisions/s
+iter  430  transitions  363026  loss +0.116  entropy 0.375  win vs random 1.00 emeral 1.00 maxdam 0.94 status 1.00 switch 0.99  snaps 0.57  81,781 decisions/s
+iter  440  transitions  360355  loss +0.156  entropy 0.357  win vs random 1.00 emeral 1.00 maxdam 0.93 status 1.00 switch 1.00  snaps 0.56  82,169 decisions/s
+iter  450  transitions  360025  loss +0.154  entropy 0.361  win vs random 1.00 emeral 1.00 maxdam 0.94 status 1.00 switch 1.00  snaps 0.53  81,980 decisions/s
+iter  460  transitions  362340  loss +0.158  entropy 0.365  win vs random 1.00 emeral 1.00 maxdam 0.96 status 1.00 switch 1.00  snaps 0.54  81,671 decisions/s
+iter  470  transitions  362141  loss +0.161  entropy 0.362  win vs random 1.00 emeral 1.00 maxdam 0.94 status 1.00 switch 0.98  snaps 0.56  81,898 decisions/s
+iter  480  transitions  360263  loss +0.164  entropy 0.365  win vs random 0.99 emeral 1.00 maxdam 0.94 status 1.00 switch 0.99  snaps 0.56  82,037 decisions/s
+iter  490  transitions  364882  loss +0.152  entropy 0.343  win vs random 1.00 emeral 1.00 maxdam 0.92 status 1.00 switch 0.99  snaps 0.55  80,264 decisions/s
+eval iter 500  minutes 25.46  maxdamage 0.94482421875
+iter  500  transitions  361578  loss +0.122  entropy 0.339  win vs random 1.00 emeral 1.00 maxdam 0.94 status 1.00 switch 1.00  snaps 0.54  80,020 decisions/s
+iter  510  transitions  360769  loss +0.096  entropy 0.353  win vs random 1.00 emeral 1.00 maxdam 0.94 status 1.00 switch 1.00  snaps 0.57  80,725 decisions/s
+iter  520  transitions  364919  loss +0.150  entropy 0.331  win vs random 1.00 emeral 1.00 maxdam 0.94 status 1.00 switch 0.97  snaps 0.55  79,612 decisions/s
+iter  530  transitions  362818  loss +0.147  entropy 0.334  win vs random 1.00 emeral 1.00 maxdam 0.94 status 1.00 switch 1.00  snaps 0.54  78,887 decisions/s
+iter  540  transitions  361273  loss +0.216  entropy 0.340  win vs random 1.00 emeral 1.00 maxdam 0.95 status 1.00 switch 0.99  snaps 0.52  78,965 decisions/s
+iter  550  transitions  361208  loss +0.167  entropy 0.323  win vs random 1.00 emeral 1.00 maxdam 0.95 status 1.00 switch 1.00  snaps 0.54  81,893 decisions/s
+iter  560  transitions  361619  loss +0.143  entropy 0.325  win vs random 1.00 emeral 1.00 maxdam 0.96 status 1.00 switch 0.99  snaps 0.53  81,815 decisions/s
+iter  570  transitions  358521  loss +0.143  entropy 0.313  win vs random 1.00 emeral 0.99 maxdam 0.94 status 1.00 switch 1.00  snaps 0.53  82,198 decisions/s
+iter  580  transitions  361997  loss +0.176  entropy 0.293  win vs random 1.00 emeral 1.00 maxdam 0.95 status 1.00 switch 0.99  snaps 0.53  81,545 decisions/s
+eval iter 585  minutes 30.08  maxdamage 0.93505859375
 saved artifacts/ppo_ppo30.npz
