@@ -13,7 +13,7 @@ def test_baselines_resolve_to_names():
     assert policy_eval.load('maxdamage', 'cpu') == 'maxdamage'
 
 
-@pytest.mark.parametrize('name', ['dqn', 'double_dqn', 'drqn', 'discrete_sac'])
+@pytest.mark.parametrize('name', ['drqn', 'discrete_sac'])
 def test_stubs_raise(name):
     with pytest.raises(NotImplementedError):
         policy_eval.load(name, 'cpu')
@@ -22,3 +22,8 @@ def test_stubs_raise(name):
 def test_an_unregistered_name_is_a_ppo_tag():
     with pytest.raises(FileNotFoundError, match='ppo_nope.npz'):
         policy_eval.load('nope', 'cpu')
+
+
+def test_dqn_loads_its_checkpoint():
+    with pytest.raises(FileNotFoundError, match='double_dqn_nope.npz'):
+        policy_eval.load('double_dqn:nope', 'cpu')

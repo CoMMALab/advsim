@@ -48,6 +48,7 @@ from advsim.players import Baselines  # noqa: E402
 from league import BASE, NAMES, SELF, Evaluator, League, Runner, learner_mask  # noqa: E402,F401
 from league_targets import foe_action  # noqa: E402
 from algos import ALGOS, gae  # noqa: E402,F401
+import tb  # noqa: E402
 
 
 class Stopwatch:
@@ -118,6 +119,7 @@ def main(argv=None) -> None:
     ap.add_argument('--init', default=None, help='start from this checkpoint (tag or .npz path) instead of from scratch')
     ap.add_argument('--layers', type=int, default=2, help='mlp: hidden layers')
     ap.add_argument('--log-every', type=int, default=10, help='iterations between log lines')
+    ap.add_argument('--tb', default=str(tb.RUNS), help="TensorBoard logdir; the run is the --save stem ('': off)")
     args = ap.parse_args(argv)
     if args.arch != 'tf':  # the transformer's options
         args.opp_action, args.damage = 0.0, False
@@ -168,6 +170,7 @@ def main(argv=None) -> None:
     league = League(B, [float(x) for x in args.mix.split(',')], args.pool, dev, gen)
     slots = torch.arange(B, device=dev)
     tick = 0
+    w = tb.writer(args.tb, tb.run_name(args.save, args.algo)) if args.tb else None
 
     for it in range(args.iters):
         t0 = time.time()
@@ -238,6 +241,11 @@ def main(argv=None) -> None:
             wr = ' '.join(f'{name[:6]} {float(w):.2f}' for name, w in zip(NAMES, league.base_wr))
             snaps = f'snaps {float(league.snap_wr[:len(league.pool)].mean()):.2f}' if league.pool else 'snaps -'
             sps = T * B / (time.time() - t0)
+            if w:
+                for k, v in {'train/loss': loss.item(), 'train/entropy': ent.item(), 'train/transitions': n,
+                             'train/decisions_per_s': sps,
+                             **{f'win/{name}': float(x) for name, x in zip(NAMES, league.base_wr)}}.items():
+                    w.add_scalar(k, v, (it + 1) * T)
             print(f'iter {it:4d}  transitions {n:7d}  loss {loss.item():+.3f}  entropy {ent.item():.3f}  '
                   f'win vs {wr}  {snaps}  {sps:,.0f} decisions/s', flush=True)
             if args.profile:
@@ -252,6 +260,10 @@ def main(argv=None) -> None:
             model.train()
             curve.append(row)
             print('eval ' + '  '.join(f'{k} {v}' for k, v in row.items()), flush=True)
+            if w:
+                for k, v in row.items():
+                    if k != 'iter':
+                        w.add_scalar(f'eval/{k}', v, (it + 1) * T)
             if args.save:
                 stem = pathlib.Path(args.save)
                 fileio.write_text(stem.with_name(stem.stem + '_curve.jsonl'), ''.join(json.dumps(r) + '\n' for r in curve))
@@ -264,6 +276,8 @@ def main(argv=None) -> None:
             net_.save(model, stem.with_name(f'{stem.stem}-{k}{"k" if (it + 1) % 1000 == 0 else ""}.npz'))
         if out_of_time:
             break
+    if w:
+        w.close()
     if args.save:
         print(f'saved {args.save}')
 

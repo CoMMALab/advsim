@@ -43,6 +43,8 @@ def _rl(module: str, prefix: str) -> Callable:
 
 register('dqn', _rl('dqn', 'dqn'))
 register('double_dqn', _rl('dqn', 'double_dqn'))
+register('dueling_dqn', _rl('dqn', 'dueling_dqn'))
+register('dueling_double_dqn', _rl('dqn', 'dueling_double_dqn'))
 register('drqn', _rl('drqn', 'drqn'))
 register('discrete_sac', _rl('discrete_sac', 'discrete_sac'))
 
