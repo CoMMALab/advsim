@@ -1,4 +1,4 @@
-"""PPO in a league: self-play, past snapshots and the five baselines.
+"""Actor-critic RL (PPO by default, --algo a2c) in a league: self-play, past snapshots and the five baselines.
 
     uv run --group rl python tools/train/train_league.py --anneal --minutes 120 --save artifacts/ppo_x.npz
     uv run --group rl python tools/train/train_league.py --init dmg46 --lr 1e-4 --anneal --minutes 1380 --save ...
@@ -36,7 +36,6 @@ import time
 import json
 
 import torch
-import torch.nn as nn
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT), str(ROOT / 'tools')]  # advsim, and league.py beside the tools
@@ -47,24 +46,8 @@ from advsim.net import Policy, legal_bits  # noqa: E402
 from advsim.net_tf import PolicyTF, with_damage  # noqa: E402
 from advsim.players import Baselines  # noqa: E402
 from league import BASE, NAMES, SELF, Evaluator, League, Runner, learner_mask  # noqa: E402,F401
-from league_targets import foe_action, foe_action_loss  # noqa: E402
-
-def gae(rew, val, done, trunc, last_val, gamma: float, lam: float):
-    """Advantages and returns over [T, B, 2] streams, one per side of a slot:
-    a game end cuts both, and a truncation bootstraps from the value there."""
-    T = rew.shape[0]
-    adv = torch.zeros_like(rew)
-    running = torch.zeros_like(last_val)
-    next_val = last_val
-    for t in reversed(range(T)):
-        end = (done[t] | trunc[t]).unsqueeze(-1)
-        nv = torch.where(end, torch.zeros_like(next_val), next_val)
-        nv = torch.where(trunc[t].unsqueeze(-1), val[t], nv)
-        delta = rew[t] + gamma * nv - val[t]
-        running = delta + gamma * lam * torch.where(end, torch.zeros_like(running), running)
-        adv[t] = running
-        next_val = val[t]
-    return adv, adv + val
+from league_targets import foe_action  # noqa: E402
+from algos import ALGOS, gae  # noqa: E402,F401
 
 
 class Stopwatch:
@@ -96,8 +79,9 @@ def main(argv=None) -> None:
     ap.add_argument('--batch', type=int, default=4096, help='battles played at once')
     ap.add_argument('--steps', type=int, default=64, help='decisions per rollout')
     ap.add_argument('--iters', type=int, default=None, help='iterations (default 1000, unbounded with --minutes)')
-    ap.add_argument('--epochs', type=int, default=4, help='PPO epochs per rollout')
-    ap.add_argument('--minibatch', type=int, default=32768, help='rows per PPO step')
+    ap.add_argument('--algo', default='ppo', choices=sorted(ALGOS), help='the update rule (tools/train/algos.py)')
+    ap.add_argument('--epochs', type=int, default=4, help='ppo: epochs per rollout')
+    ap.add_argument('--minibatch', type=int, default=32768, help='ppo: rows per step')
     ap.add_argument('--micro', type=int, default=8192, help='backward in chunks of this many rows (0: whole minibatch)')
     ap.add_argument('--lr', type=float, default=3e-4, help='Adam; use 1e-4 with --init')
     ap.add_argument('--gamma', type=float, default=0.995, help='discount')
@@ -180,6 +164,7 @@ def main(argv=None) -> None:
     started = time.time()
     watch = Stopwatch(args.profile, cuda)
     opt = torch.optim.Adam(net.parameters(), lr=args.lr)
+    algo = ALGOS[args.algo](args)
     league = League(B, [float(x) for x in args.mix.split(',')], args.pool, dev, gen)
     slots = torch.arange(B, device=dev)
     tick = 0
@@ -245,28 +230,7 @@ def main(argv=None) -> None:
         a = (a - a.mean()) / (a.std() + 1e-8)
         n = a.shape[0]
         watch.lap('gae')
-        for _ in range(args.epochs):
-            perm = torch.randperm(n, device=dev)
-            for s0 in range(0, n, args.minibatch):
-                mb = perm[s0:s0 + args.minibatch]
-                opt.zero_grad()
-                for c0 in range(0, len(mb), args.micro or len(mb)):  # gradient accumulation: the same step
-                    i = mb[c0:c0 + (args.micro or len(mb))]
-                    with amp():
-                        if args.opp_action:
-                            dist, v, extras = net(flat['obs'][i], flat['legal'][i], opp_action=True)
-                        else:
-                            dist, v = net(flat['obs'][i], flat['legal'][i])
-                    ratio = (dist.log_prob(flat['act'][i]) - flat['logp'][i]).exp()
-                    pg = -torch.min(ratio * a[i], ratio.clamp(0.8, 1.2) * a[i]).mean()
-                    vf = ((v - r_[i]) ** 2).mean()
-                    if args.opp_action:
-                        vf = vf + args.opp_action * foe_action_loss(extras['opp_action'], flat['foe_act'][i])
-                    ent = dist.entropy().mean()
-                    loss = pg + 0.5 * vf - args.ent * ent
-                    (loss * (len(i) / len(mb))).backward()
-                nn.utils.clip_grad_norm_(net.parameters(), 0.5)
-                opt.step()
+        loss, ent = algo.update(net, opt, flat, a, r_, amp)
         watch.lap('update')
         assert torch.isfinite(loss), 'a non-finite loss'
         assert not env.err.any(), 'an illegal action reached the engine'
