@@ -46,12 +46,12 @@ class Replay:
         self.size, self.n, self.at = size, 0, 0
         z = lambda *s, dtype=torch.float32: torch.zeros(size, *s, dtype=dtype, device=device)
         self.obs, self.next = z(obs_layout.OBS_DIM, dtype=torch.int16), z(obs_layout.OBS_DIM, dtype=torch.int16)
-        self.next_legal = z(ACTIONS, dtype=torch.bool)
+        self.legal, self.next_legal = z(ACTIONS, dtype=torch.bool), z(ACTIONS, dtype=torch.bool)
         self.act, self.rew, self.done = z(dtype=torch.long), z(), z()
 
-    def add(self, obs, act, rew, done, nxt, next_legal) -> None:
+    def add(self, obs, legal, act, rew, done, nxt, next_legal) -> None:
         i = (self.at + torch.arange(len(obs), device=obs.device)) % self.size
-        for buf, x in ((self.obs, obs), (self.act, act), (self.rew, rew), (self.done, done),
+        for buf, x in ((self.obs, obs), (self.legal, legal), (self.act, act), (self.rew, rew), (self.done, done),
                        (self.next, nxt), (self.next_legal, next_legal)):
             buf[i] = x
         self.at = (self.at + len(obs)) % self.size
@@ -59,7 +59,7 @@ class Replay:
 
     def sample(self, k: int, gen):
         i = torch.randint(0, self.n, (k,), device=self.obs.device, generator=gen)
-        return self.obs[i], self.act[i], self.rew[i], self.done[i], self.next[i], self.next_legal[i]
+        return self.obs[i], self.legal[i], self.act[i], self.rew[i], self.done[i], self.next[i], self.next_legal[i]
 
 
 def main(argv=None) -> None:
@@ -127,8 +127,8 @@ def main(argv=None) -> None:
         obs, mask = env.observe()
         obs, legal = obs.clone(), legal_bits(mask)
         if prev is not None:  # last decision's transitions end here
-            p_obs, p_act, p_rew, p_done, keep = prev
-            replay.add(p_obs[keep], p_act[keep], p_rew[keep], p_done[keep], obs[keep], legal[keep])
+            p_obs, p_legal, p_act, p_rew, p_done, keep = prev
+            replay.add(p_obs[keep], p_legal[keep], p_act[keep], p_rew[keep], p_done[keep], obs[keep], legal[keep])
 
         with torch.no_grad():
             greedy = net.q(obs.view(B * 2, -1), legal.view(B * 2, -1)).argmax(-1).view(B, 2)
@@ -151,18 +151,18 @@ def main(argv=None) -> None:
         rew = torch.stack([r, -r], dim=-1)
         league.record(done, rew[torch.arange(B, device=dev), league.side])
         both = lambda x: x.unsqueeze(-1).expand(B, 2)
-        prev = (obs, act, rew, both(done).float(), mine & ~both(trunc))
+        prev = (obs, legal, act, rew, both(done).float(), mine & ~both(trunc))
         league.draw(done | trunc)
         assert not env.err.any(), 'an illegal action reached the engine'
 
         if replay.n >= args.start:
             for _ in range(args.updates):
-                o, a, rw, d, nx, nl = replay.sample(args.minibatch, gen)
+                o, lg, a, rw, d, nx, nl = replay.sample(args.minibatch, gen)
                 with torch.no_grad():
                     tq = target.q(nx, nl)
                     pick = net.q(nx, nl).argmax(-1, keepdim=True) if args.double else tq.argmax(-1, keepdim=True)
                     y = rw + args.gamma * (1 - d) * tq.gather(1, pick).squeeze(1)
-                q = net.q(o, torch.ones_like(nl)).gather(1, a.unsqueeze(1)).squeeze(1)
+                q = net.q(o, lg).gather(1, a.unsqueeze(1)).squeeze(1)
                 loss = nn.functional.smooth_l1_loss(q, y)
                 opt.zero_grad()
                 loss.backward()

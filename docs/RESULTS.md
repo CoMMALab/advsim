@@ -181,6 +181,40 @@ each on one RTX A5000 (`dqn_mlp`, `double_dqn_mlp`, 37k and 43k decisions):
   four changed from the first run; all sit inside each other's intervals, so
   none is better than the others.
 
+### REINFORCE, GRPO and discrete SAC
+
+Same MLP (2x512), league mix (0.5 self, 0.25 snapshots, 0.25 baselines), seed 0,
+30 minutes each, one after another on one A5000.
+
+- **REINFORCE** (`tools/train/train_pg.py --algo reinforce`: batch-mean
+  baseline, one full-batch step per batch of finished games): `eval/maxdamage`
+  0.14-0.16 from 2.5 minutes to the end, flat. `policy_eval` random 0.861,
+  maxdamage 0.161, switchaverse 0.500.
+- **GRPO** (`--algo grpo`: groups of 8 forks of one deal, group-normalized
+  result, clipped ratio, KL 0.01 to a reference refreshed every 50 iterations):
+  0.14 at 5 minutes, 0.31 at 19, then flat at 0.28-0.31. `policy_eval` random
+  0.866, maxdamage 0.299, switchaverse 0.647.
+- **Discrete SAC** (`tools/train/train_discrete_sac.py`: twin critics, alpha from
+  0.005, entropy target 0.5 log(legal actions)): 0.51 at 10 minutes, then flat
+  at 0.49-0.52, like DQN. `policy_eval` random 0.969, maxdamage 0.515,
+  switchaverse 0.852. It makes about 55k decisions/s against DQN's 90-140k (three
+  networks per update).
+- Bracket refit with these three (256 games per pair): `dqn:mlp` 1608,
+  `maxdamage` 1598, the other DQN variants 1581-1592, `discrete_sac:mlp` 1578
+  [1550, 1608], `grpo:mlp` 1400 [1370, 1430], `search-32` 1390,
+  `reinforce:mlp` 1295 [1271, 1323].
+- Without a critic, GRPO's forked-group baseline roughly doubles REINFORCE's
+  score against maxdamage, but both stay far below the value-based methods in
+  30 minutes. The off-policy methods (DQN, discrete SAC) all stop at the same
+  level as maxdamage.
+- **PPO on the same MLP** (`train_league.py --arch mlp`, defaults otherwise,
+  30 minutes, `ppo_mlp`): `eval/maxdamage` 0.46 at 6 minutes, 0.54 at the end.
+  `policy_eval` random 0.975, maxdamage 0.537, switchaverse 0.871. Elo 1600
+  [1564, 1631], inside the DQN/SAC cluster (1580-1609) and level with
+  `maxdamage` (1598). At 30 minutes on a 2x512 MLP, PPO, DQN and discrete SAC
+  are indistinguishable; the gap to `ppo:dmg46` (2177) comes from the
+  transformer, the 80 hours of training, or both.
+
 ## Search
 
 The device search (`engine/tree.py`, `search/mcts.py`) is open-loop

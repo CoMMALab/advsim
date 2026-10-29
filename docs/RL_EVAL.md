@@ -42,7 +42,9 @@ The harness needs `advsim build` and, for the `ppo` policies, the networks in
 | `random`, `emerald`, `maxdamage`, `status`, `switchaverse` | The scripted baselines, run in the engine's kernel |
 | `ppo[:tag]` | A PPO network, loaded from `artifacts/ppo_<tag>.npz`. With no tag it loads `ppo_baseline.npz`. A tag ending in `.npz` is used as the path. A bare name that isn't registered, like `dmg46`, is also a PPO tag |
 | `dqn[:tag]`, `double_dqn[:tag]`, `dueling_dqn[:tag]`, `dueling_double_dqn[:tag]` | `advsim.rl.dqn`, from `artifacts/<name>_<tag>.npz` (`tools/train/train_dqn.py`, `--double`, `--dueling`) |
-| `drqn`, `discrete_sac` | Placeholders that raise `NotImplementedError` |
+| `reinforce[:tag]`, `grpo[:tag]` | `advsim.net.Policy` (value head unused), from `artifacts/<name>_<tag>.npz` (`tools/train/train_pg.py --algo`) |
+| `discrete_sac[:tag]` | `advsim.rl.discrete_sac`, from `artifacts/discrete_sac_<tag>.npz` (`tools/train/train_discrete_sac.py`) |
+| `drqn` | A placeholder that raises `NotImplementedError` |
 
 ## The policy contract
 
@@ -79,7 +81,7 @@ implemented.
 | `tests/test_<algo>.py` | A few iterations run, and a save/load round trip matches |
 
 DQN and Double DQN are implemented (`advsim/rl/dqn.py`, `train_dqn.py --double`).
-Placeholders with `TODO:` markers exist for `drqn` and `discrete_sac`. The
+REINFORCE and GRPO (`train_pg.py`) and discrete SAC are implemented; `drqn` is a placeholder. The
 harness already loads `<algo>[:tag]` through `advsim.rl.<algo>.load`, so a
 policy is ready to score once `Net.forward` and `load` are implemented.
 

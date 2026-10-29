@@ -13,7 +13,7 @@ def test_baselines_resolve_to_names():
     assert policy_eval.load('maxdamage', 'cpu') == 'maxdamage'
 
 
-@pytest.mark.parametrize('name', ['drqn', 'discrete_sac'])
+@pytest.mark.parametrize('name', ['drqn'])
 def test_stubs_raise(name):
     with pytest.raises(NotImplementedError):
         policy_eval.load(name, 'cpu')

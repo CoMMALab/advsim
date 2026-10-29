@@ -45,6 +45,8 @@ register('dqn', _rl('dqn', 'dqn'))
 register('double_dqn', _rl('dqn', 'double_dqn'))
 register('dueling_dqn', _rl('dqn', 'dueling_dqn'))
 register('dueling_double_dqn', _rl('dqn', 'dueling_double_dqn'))
+register('reinforce', lambda device, tag: net_.load(fileio.ARTIFACTS / f'reinforce_{tag or "baseline"}.npz', device))
+register('grpo', lambda device, tag: net_.load(fileio.ARTIFACTS / f'grpo_{tag or "baseline"}.npz', device))
 register('drqn', _rl('drqn', 'drqn'))
 register('discrete_sac', _rl('discrete_sac', 'discrete_sac'))
 
